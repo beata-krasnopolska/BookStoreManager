@@ -1,3 +1,4 @@
+using AutoMapper;
 using BookStoreManager.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,8 @@ namespace BookStoreManager
             services.AddControllers();
             services.AddDbContext<BookStoreDbContext>();
             services.AddScoped<BookStoreSeeder>();
+            services.AddAutoMapper(this.GetType().Assembly);
+);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
