@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BookStoreManager.Entities;
+using BookStoreManager.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,30 +13,41 @@ namespace BookStoreManager.Controllers
     public class BookStoreController : ControllerBase
     {
         private readonly BookStoreDbContext _dbContext;
-        public BookStoreController(BookStoreDbContext dbContext)
+        private readonly IMapper _mapper;
+        public BookStoreController(BookStoreDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<BookStore>> GetAllBookStores()
+        public ActionResult<IEnumerable<BookStoreDto>> GetAllBookStores()
         {
-            var bookStores = _dbContext.BookStores.ToList();
+            var bookStores = _dbContext.BookStores.Include(b => b.Books).Include(a =>a.Address).ToList();
 
-            return Ok(bookStores);
+            if(bookStores == null)
+            {
+                return BadRequest();
+            }
+
+            var bookStoresDto = _mapper.Map<List<BookStoreDto>>(bookStores);
+
+            return Ok(bookStoresDto);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<BookStore> GetBookStoresBNyId([FromRoute] int id)
+        public ActionResult<BookStoreDto> GetBookStoresBNyId([FromRoute] int id)
         {
-            var bookStore = _dbContext.BookStores.FirstOrDefault(b => b.Id == id);
+            var bookStore = _dbContext.BookStores.Include(b => b.Books).Include(a => a.Address).FirstOrDefault(b => b.Id == id);
 
-            if (bookStore is null)
+            if(bookStore is null)
             {
                 return NotFound();
             }
 
-            return Ok(bookStore);
+            var bookStoreDto = _mapper.Map<BookStoreDto>(bookStore);
+
+            return Ok(bookStoreDto);
         }
     }
 }
