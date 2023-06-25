@@ -9,9 +9,9 @@ namespace BookStoreManager
         public BookStoreMappingProfile()
         {
             CreateMap<BookStore, BookStoreDto>()
-                .ForMember(b => b.City, c => c.MapFrom(s => s.Address.City))
-                .ForMember(b => b.Street, c => c.MapFrom(s => s.Address.Street))
-                .ForMember(b => b.PostalCode, c => c.MapFrom(s => s.Address.PostalCode));
+                .ForMember(b => b.City, c => c.MapFrom(s => s.Address.City)).MaxDepth(3)
+                .ForMember(b => b.Street, c => c.MapFrom(s => s.Address.Street)).MaxDepth(3)
+                .ForMember(b => b.PostalCode, c => c.MapFrom(s => s.Address.PostalCode)).MaxDepth(3);
 
             CreateMap<Book, BookDto>().MaxDepth(3);
         }

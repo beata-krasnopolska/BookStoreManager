@@ -32,6 +32,9 @@ namespace BookStoreManager
             services.AddDbContext<BookStoreDbContext>();
             services.AddScoped<BookStoreSeeder>();
             services.AddAutoMapper(this.GetType().Assembly);
+            services.AddControllersWithViews()
+            .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
         }
 
