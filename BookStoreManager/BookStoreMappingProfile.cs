@@ -14,6 +14,10 @@ namespace BookStoreManager
                 .ForMember(b => b.PostalCode, c => c.MapFrom(s => s.Address.PostalCode)).MaxDepth(3);
 
             CreateMap<Book, BookDto>().MaxDepth(3);
+
+            CreateMap<CretaeBookStoreDto, BookStore>()
+                .ForMember(b => b.Address, r => r.MapFrom(dto => new Address()
+                { City = dto.City, Street = dto.Street, PostalCode = dto.PostalCode }));
         }
     }
 }

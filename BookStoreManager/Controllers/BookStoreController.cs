@@ -49,5 +49,16 @@ namespace BookStoreManager.Controllers
 
             return Ok(bookStoreDto);
         }
+
+        [HttpPost]
+        public ActionResult<int> CreateBookStore([FromBody] CretaeBookStoreDto cretaeBookStoreDto)
+        {
+            var bookStore = _mapper.Map<BookStore>(cretaeBookStoreDto);
+
+            _dbContext.BookStores.Add(bookStore);
+            _dbContext.SaveChanges();
+
+            return Created($"api/bookStore/{bookStore.Id}", null);
+        }
     }
 }
