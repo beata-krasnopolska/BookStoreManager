@@ -1,5 +1,6 @@
 using AutoMapper;
 using BookStoreManager.Entities;
+using BookStoreManager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,8 +35,8 @@ namespace BookStoreManager
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddControllersWithViews()
             .AddNewtonsoftJson(options =>
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddScoped<IBookStoreService, BookStoreService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
