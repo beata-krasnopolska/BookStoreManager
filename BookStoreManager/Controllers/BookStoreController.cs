@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookStoreManager.Entities;
 using BookStoreManager.Models;
+using BookStoreManager.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -12,53 +13,44 @@ namespace BookStoreManager.Controllers
     [ApiController]
     public class BookStoreController : ControllerBase
     {
-        private readonly BookStoreDbContext _dbContext;
-        private readonly IMapper _mapper;
-        public BookStoreController(BookStoreDbContext dbContext, IMapper mapper)
+        private readonly IBookStoreService _bookStoreService;
+        public BookStoreController(BookStoreService bookStoreService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _bookStoreService = bookStoreService;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<BookStoreDto>> GetAllBookStores()
         {
-            var bookStores = _dbContext.BookStores.Include(b => b.Books).Include(a =>a.Address).ToList();
+            var bookStores = _bookStoreService.GetAllBookStores();
 
             if(bookStores == null)
             {
                 return BadRequest();
             }
 
-            var bookStoresDto = _mapper.Map<List<BookStoreDto>>(bookStores);
-
-            return Ok(bookStoresDto);
+            return Ok(bookStores);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<BookStoreDto> GetBookStoresBNyId([FromRoute] int id)
+        public ActionResult<BookStoreDto> GetBookStoresById([FromRoute] int id)
         {
-            var bookStore = _dbContext.BookStores.Include(b => b.Books).Include(a => a.Address).FirstOrDefault(b => b.Id == id);
+            var bookStore = _bookStoreService.GetBookStoreById(id);
 
             if(bookStore is null)
             {
                 return NotFound();
             }
 
-            var bookStoreDto = _mapper.Map<BookStoreDto>(bookStore);
-
-            return Ok(bookStoreDto);
+            return Ok(bookStore);
         }
 
         [HttpPost]
         public ActionResult<int> CreateBookStore([FromBody] CretaeBookStoreDto cretaeBookStoreDto)
         {
-            var bookStore = _mapper.Map<BookStore>(cretaeBookStoreDto);
+            var bookStoreId = _bookStoreService.CreateBookStore(cretaeBookStoreDto);
 
-            _dbContext.BookStores.Add(bookStore);
-            _dbContext.SaveChanges();
-
-            return Created($"api/bookStore/{bookStore.Id}", null);
+            return Created($"api/bookStore/{bookStoreId}", null);
         }
     }
 }
