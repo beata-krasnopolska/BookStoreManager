@@ -9,6 +9,8 @@ namespace BookStoreManager.Services
 
         public BookStoreDto GetBookStoreById(int id);
 
-        public int CreateBookStore(CretaeBookStoreDto cretaeBookStoreDto)
+        public int CreateBookStore(CretaeBookStoreDto cretaeBookStoreDto);
+
+        public bool DeleteBookStore(int id);
     }
 }

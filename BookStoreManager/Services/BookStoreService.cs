@@ -49,5 +49,16 @@ namespace BookStoreManager.Services
 
             return bookStore.Id;
         }
+
+        public bool DeleteBookStore(int id)
+        {
+            var bookStore = _dbContext.BookStores.FirstOrDefault(x=>x.Id == id);
+            if (bookStore is null) return false;
+
+            _dbContext.BookStores.Remove(bookStore);
+            _dbContext.SaveChanges();
+
+            return true;
+        }
     }
 }
