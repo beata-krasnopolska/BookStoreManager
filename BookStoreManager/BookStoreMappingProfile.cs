@@ -18,6 +18,8 @@ namespace BookStoreManager
             CreateMap<CretaeBookStoreDto, BookStore>()
                 .ForMember(b => b.Address, r => r.MapFrom(dto => new Address()
                 { City = dto.City, Street = dto.Street, PostalCode = dto.PostalCode }));
+
+            CreateMap<UpdateBookStoreDto, BookStore>();
         }
     }
 }
