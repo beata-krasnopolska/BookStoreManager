@@ -12,6 +12,12 @@ namespace BookStoreManager.Services
     {
         private readonly BookStoreDbContext _dbContext;
         private readonly IMapper _mapper;
+
+        public BookStoreService(BookStoreDbContext dbContext, IMapper mapper)
+        {
+            _dbContext = dbContext;
+            _mapper = mapper;
+        }
         public IEnumerable<BookStoreDto> GetAllBookStores()
         {
             var bookStores = _dbContext.BookStores.Include(b => b.Books).Include(a => a.Address).ToList();
@@ -56,6 +62,21 @@ namespace BookStoreManager.Services
             if (bookStore is null) return false;
 
             _dbContext.BookStores.Remove(bookStore);
+            _dbContext.SaveChanges();
+
+            return true;
+        }
+
+        public bool UpdateBookStore(UpdateBookStoreDto dto, int id)
+        {
+            var bookStore = _dbContext.BookStores
+                .Include(_ => _.Books)
+                .Include(_ => _.Address)
+                .FirstOrDefault(x=>x.Id == id);
+            if (bookStore is null) return false;
+
+            _mapper.Map(dto, bookStore);
+
             _dbContext.SaveChanges();
 
             return true;

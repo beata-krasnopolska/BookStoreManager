@@ -12,5 +12,6 @@ namespace BookStoreManager.Services
         public int CreateBookStore(CretaeBookStoreDto cretaeBookStoreDto);
 
         public bool DeleteBookStore(int id);
+        bool UpdateBookStore(UpdateBookStoreDto dto, int id);
     }
 }
