@@ -14,7 +14,8 @@ namespace BookStoreManager.Controllers
     public class BookStoreController : ControllerBase
     {
         private readonly IBookStoreService _bookStoreService;
-        public BookStoreController(BookStoreService bookStoreService)
+
+        public BookStoreController(IBookStoreService bookStoreService)
         {
             _bookStoreService = bookStoreService;
         }
@@ -63,6 +64,17 @@ namespace BookStoreManager.Controllers
                 return NoContent();
             }
             return NotFound();
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateBookStore([FromBody]UpdateBookStoreDto dto, [FromRoute] int id)
+        {
+            var isBookStoreUpdated = _bookStoreService.UpdateBookStore(dto, id);
+            if (!isBookStoreUpdated)
+            {
+                return NotFound();
+            }
+            return Ok();
         }
     }
 }
