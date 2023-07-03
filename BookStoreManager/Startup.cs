@@ -39,6 +39,7 @@ namespace BookStoreManager
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddScoped<IBookStoreService, BookStoreService>();
             services.AddScoped<ErrorHandlingMiddleware>();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +55,12 @@ namespace BookStoreManager
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI( c => 
+            { 
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookStore API");
+            });
 
             app.UseRouting();
 
