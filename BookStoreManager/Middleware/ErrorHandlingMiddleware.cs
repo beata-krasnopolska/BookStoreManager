@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BookStoreManager.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -17,6 +18,11 @@ namespace BookStoreManager.Middleware
             try
             {
                 await next.Invoke(context);
+            }
+            catch (ItemNotFoundException itemNotFoundException)
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync(itemNotFoundException.Message);
             }
             catch (Exception ex)
             {

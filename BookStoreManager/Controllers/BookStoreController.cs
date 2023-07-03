@@ -1,11 +1,7 @@
-﻿using AutoMapper;
-using BookStoreManager.Entities;
-using BookStoreManager.Models;
+﻿using BookStoreManager.Models;
 using BookStoreManager.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BookStoreManager.Controllers
 {
@@ -54,26 +50,19 @@ namespace BookStoreManager.Controllers
             return Created($"api/bookStore/{bookStoreId}", null);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{bookStoreId}")]
         public ActionResult DeleteBookStore([FromRoute] int bookStoreId)
         {
-            var isDeleted = _bookStoreService.DeleteBookStore(bookStoreId);
+            _bookStoreService.DeleteBookStore(bookStoreId);
 
-            if (isDeleted)
-            {
-                return NoContent();
-            }
-            return NotFound();
+            return NoContent();
         }
 
         [HttpPut("{id}")]
         public ActionResult UpdateBookStore([FromBody]UpdateBookStoreDto dto, [FromRoute] int id)
         {
-            var isBookStoreUpdated = _bookStoreService.UpdateBookStore(dto, id);
-            if (!isBookStoreUpdated)
-            {
-                return NotFound();
-            }
+            _bookStoreService.UpdateBookStore(dto, id);
+
             return Ok();
         }
     }

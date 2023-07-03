@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStoreManager.Entities;
+using BookStoreManager.Exceptions;
 using BookStoreManager.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,10 @@ namespace BookStoreManager.Services
         }
         public IEnumerable<BookStoreDto> GetAllBookStores()
         {
-            var bookStores = _dbContext.BookStores.Include(b => b.Books).Include(a => a.Address).ToList();
+            var bookStores = _dbContext.BookStores
+                .Include(b => b.Books)
+                .Include(a => a.Address)
+                .ToList();
 
             if (bookStores == null)
             {
@@ -37,11 +41,14 @@ namespace BookStoreManager.Services
 
         public BookStoreDto GetBookStoreById(int id)
         {
-            var bookStore = _dbContext.BookStores.Include(b => b.Books).Include(a => a.Address).FirstOrDefault(b => b.Id == id);
+            var bookStore = _dbContext.BookStores
+                .Include(b => b.Books)
+                .Include(a => a.Address)
+                .FirstOrDefault(b => b.Id == id);
 
             if (bookStore is null)
             {
-                throw new Exception();
+                throw new ItemNotFoundException("BookStore not found");
             }
 
             var bookStoreDto = _mapper.Map<BookStoreDto>(bookStore);
@@ -59,35 +66,32 @@ namespace BookStoreManager.Services
             return bookStore.Id;
         }
 
-        public bool DeleteBookStore(int id)
+        public void DeleteBookStore(int id)
         {
             
             var bookStore = _dbContext.BookStores.FirstOrDefault(x=>x.Id == id);
             if (bookStore is null)
             {
                 _logger.LogError($"Delete invoked BookStore NOT FOUND {id}");
-                return false;
+                throw new ItemNotFoundException("BookStore not found"); ;
             }
 
             _dbContext.BookStores.Remove(bookStore);
             _dbContext.SaveChanges();
-
-            return true;
         }
 
-        public bool UpdateBookStore(UpdateBookStoreDto dto, int id)
+        public void UpdateBookStore(UpdateBookStoreDto dto, int id)
         {
             var bookStore = _dbContext.BookStores
                 .Include(_ => _.Books)
                 .Include(_ => _.Address)
                 .FirstOrDefault(x=>x.Id == id);
-            if (bookStore is null) return false;
+            if (bookStore is null)
+                throw new ItemNotFoundException("BookStore not found");
 
             _mapper.Map(dto, bookStore);
 
             _dbContext.SaveChanges();
-
-            return true;
         }
     }
 }

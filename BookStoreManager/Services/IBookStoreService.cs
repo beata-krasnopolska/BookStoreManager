@@ -5,13 +5,14 @@ namespace BookStoreManager.Services
 {
     public interface IBookStoreService
     {
-        public IEnumerable<BookStoreDto> GetAllBookStores();
+        IEnumerable<BookStoreDto> GetAllBookStores();
 
-        public BookStoreDto GetBookStoreById(int id);
+        BookStoreDto GetBookStoreById(int id);
 
-        public int CreateBookStore(CretaeBookStoreDto cretaeBookStoreDto);
+        int CreateBookStore(CretaeBookStoreDto cretaeBookStoreDto);
 
-        public bool DeleteBookStore(int id);
-        bool UpdateBookStore(UpdateBookStoreDto dto, int id);
+        void DeleteBookStore(int id);
+
+        void UpdateBookStore(UpdateBookStoreDto dto, int id);
     }
 }
