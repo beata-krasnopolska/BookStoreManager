@@ -39,6 +39,7 @@ namespace BookStoreManager
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddScoped<IBookStoreService, BookStoreService>();
             services.AddScoped<ErrorHandlingMiddleware>();
+            services.AddScoped<TimeMeasureMiddleware>();
             services.AddSwaggerGen();
         }
 
@@ -53,6 +54,7 @@ namespace BookStoreManager
             }
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<TimeMeasureMiddleware>();
 
             app.UseHttpsRedirection();
 
