@@ -61,9 +61,13 @@ namespace BookStoreManager.Services
 
         public bool DeleteBookStore(int id)
         {
-            _logger.LogWarning($"DELETE action invoked for id {id}");
+            
             var bookStore = _dbContext.BookStores.FirstOrDefault(x=>x.Id == id);
-            if (bookStore is null) return false;
+            if (bookStore is null)
+            {
+                _logger.LogError($"Delete invoked BookStore NOT FOUND {id}");
+                return false;
+            }
 
             _dbContext.BookStores.Remove(bookStore);
             _dbContext.SaveChanges();
