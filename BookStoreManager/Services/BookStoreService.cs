@@ -2,6 +2,7 @@
 using BookStoreManager.Entities;
 using BookStoreManager.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,13 @@ namespace BookStoreManager.Services
     {
         private readonly BookStoreDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<BookStoreService> _logger;
 
-        public BookStoreService(BookStoreDbContext dbContext, IMapper mapper)
+        public BookStoreService(BookStoreDbContext dbContext, IMapper mapper, ILogger<BookStoreService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
         public IEnumerable<BookStoreDto> GetAllBookStores()
         {
@@ -58,6 +61,7 @@ namespace BookStoreManager.Services
 
         public bool DeleteBookStore(int id)
         {
+            _logger.LogWarning($"DELETE action invoked for id {id}");
             var bookStore = _dbContext.BookStores.FirstOrDefault(x=>x.Id == id);
             if (bookStore is null) return false;
 

@@ -54,8 +54,8 @@ namespace BookStoreManager.Controllers
             return Created($"api/bookStore/{bookStoreId}", null);
         }
 
-        [HttpDelete]
-        public ActionResult DeleteBookStore([FromBody] int bookStoreId)
+        [HttpDelete("{id}")]
+        public ActionResult DeleteBookStore([FromRoute] int bookStoreId)
         {
             var isDeleted = _bookStoreService.DeleteBookStore(bookStoreId);
 
