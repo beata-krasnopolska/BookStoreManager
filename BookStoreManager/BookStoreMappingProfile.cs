@@ -20,6 +20,8 @@ namespace BookStoreManager
                 { City = dto.City, Street = dto.Street, PostalCode = dto.PostalCode }));
 
             CreateMap<UpdateBookStoreDto, BookStore>();
+
+            CreateMap<CreateBookDto, Book>();
         }
     }
 }
