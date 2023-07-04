@@ -6,6 +6,6 @@ namespace BookStoreManager.Services
     {
         int CreateBook(int bookStoreId, CreateBookDto createBookDto);
 
-
+        BookDto GetBook(int bookStoreId, int dishId);
     }
 }

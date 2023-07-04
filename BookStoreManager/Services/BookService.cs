@@ -30,9 +30,19 @@ namespace BookStoreManager.Services
             return bookEntity.Id;
         }
 
+        public BookDto GetBook(int bookStoreId, int bookId)
+        {
+            var bookStore = _dbContext.BookStores.FirstOrDefault(x=>x.Id == bookStoreId);
+            if (bookStore == null)
+                throw new ItemNotFoundException("The restaurant not found");
+
+            var book = _dbContext.Books.FirstOrDefault(x => x.Id == bookId);
+
+            if (book == null || book.BookstoreId != bookStoreId)
+                throw new ItemNotFoundException("Book not found");
 
 
-
-
+            return _mapper.Map<BookDto>(book);
+        }
     }
 }

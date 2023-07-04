@@ -22,5 +22,13 @@ namespace BookStoreManager.Controllers
 
             return Created($"api/bookStore/{bookStoreId}/book/{bookId}", null);
         }
+
+        [HttpGet("{dishId}")]
+        public ActionResult<BookDto> GetBook([FromRoute] int bookStoreId, [FromRoute] int dishId)
+        {
+           var result = _bookService.GetBook(bookStoreId, dishId);
+
+            return Ok(result);
+        }
     }
 }
