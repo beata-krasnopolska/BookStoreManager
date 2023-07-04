@@ -1,4 +1,5 @@
 ﻿using BookStoreManager.Models;
+using System.Collections.Generic;
 
 namespace BookStoreManager.Services
 {
@@ -6,6 +7,8 @@ namespace BookStoreManager.Services
     {
         int CreateBook(int bookStoreId, CreateBookDto createBookDto);
 
-        BookDto GetBook(int bookStoreId, int dishId);
+        BookDto GetBook(int bookStoreId, int bookId);
+
+        List<BookDto> GetAllBooks(int bookStoreId);
     }
 }

@@ -2,6 +2,8 @@
 using BookStoreManager.Entities;
 using BookStoreManager.Exceptions;
 using BookStoreManager.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BookStoreManager.Services
@@ -30,11 +32,21 @@ namespace BookStoreManager.Services
             return bookEntity.Id;
         }
 
+        public List<BookDto> GetAllBooks(int bookStoreId)
+        {
+            var bookStore = _dbContext.BookStores.Include(x => x.Books).FirstOrDefault(x => x.Id == bookStoreId);
+
+            if (bookStore == null)
+                throw new ItemNotFoundException("BooStore not found");
+
+            return _mapper.Map<List<BookDto>>(bookStore.Books);
+        }
+
         public BookDto GetBook(int bookStoreId, int bookId)
         {
             var bookStore = _dbContext.BookStores.FirstOrDefault(x=>x.Id == bookStoreId);
             if (bookStore == null)
-                throw new ItemNotFoundException("The restaurant not found");
+                throw new ItemNotFoundException("The BookStore not found");
 
             var book = _dbContext.Books.FirstOrDefault(x => x.Id == bookId);
 
