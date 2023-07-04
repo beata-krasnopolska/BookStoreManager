@@ -32,6 +32,14 @@ namespace BookStoreManager.Services
             return bookEntity.Id;
         }
 
+        public void DeleteAllBooks(int bookStoreId)
+        {
+            var bookStore = _dbContext.BookStores.Include(x => x.Books).FirstOrDefault(x => x.Id == bookStoreId);
+
+            _dbContext.RemoveRange(bookStore.Books);
+            _dbContext.SaveChanges();
+        }
+
         public List<BookDto> GetAllBooks(int bookStoreId)
         {
             var bookStore = _dbContext.BookStores.Include(x => x.Books).FirstOrDefault(x => x.Id == bookStoreId);

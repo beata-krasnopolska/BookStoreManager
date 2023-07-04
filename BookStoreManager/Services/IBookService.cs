@@ -10,5 +10,7 @@ namespace BookStoreManager.Services
         BookDto GetBook(int bookStoreId, int bookId);
 
         List<BookDto> GetAllBooks(int bookStoreId);
+
+        void DeleteAllBooks(int bookStoreId);
     }
 }

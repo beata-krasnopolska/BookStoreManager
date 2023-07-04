@@ -39,5 +39,13 @@ namespace BookStoreManager.Controllers
 
             return Ok(result);
         }
+
+        [HttpDelete]
+        public ActionResult DeleteAllBooks([FromRoute] int bookStoreId)
+        {
+            _bookService.DeleteAllBooks(bookStoreId);
+
+            return NoContent();
+        }
     }
 }
