@@ -22,6 +22,13 @@ namespace BookStoreManager
                     _dbContext.BookStores.AddRange(bookStores);
                     _dbContext.SaveChanges();
                 };
+
+                if (!_dbContext.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    _dbContext.Roles.AddRange(roles);
+                    _dbContext.SaveChanges();
+                };
             };
         }
 
@@ -87,6 +94,27 @@ namespace BookStoreManager
                 }
             };
             return bookStores;
+        }
+
+        private IEnumerable<Role> GetRoles()
+        {
+            var roles = new List<Role>()
+            {
+                new Role()
+                {
+                    Name = "Admin",
+                },
+                new Role()
+                {
+                    Name = "Manager",
+                },
+                new Role()
+                {
+                    Name = "Client",
+                },
+            };
+
+            return roles;
         }
     }
 }
