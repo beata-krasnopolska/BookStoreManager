@@ -19,9 +19,7 @@ namespace BookStoreManager.Services
         }
         public int CreateBook(int bookStoreId, CreateBookDto createBookDto) 
         {
-            var bookStore = _dbContext.BookStores.FirstOrDefault(x => x.Id == bookStoreId);
-            if (bookStore == null)
-                throw new ItemNotFoundException("The book store not found");
+            var bookStore = GetBookStoreById(bookStoreId);
 
             var bookEntity = _mapper.Map<Book>(createBookDto);
 
@@ -34,7 +32,7 @@ namespace BookStoreManager.Services
 
         public void DeleteAllBooks(int bookStoreId)
         {
-            var bookStore = _dbContext.BookStores.Include(x => x.Books).FirstOrDefault(x => x.Id == bookStoreId);
+            var bookStore = GetBookStoreById(bookStoreId);
 
             _dbContext.RemoveRange(bookStore.Books);
             _dbContext.SaveChanges();
@@ -42,19 +40,14 @@ namespace BookStoreManager.Services
 
         public List<BookDto> GetAllBooks(int bookStoreId)
         {
-            var bookStore = _dbContext.BookStores.Include(x => x.Books).FirstOrDefault(x => x.Id == bookStoreId);
-
-            if (bookStore == null)
-                throw new ItemNotFoundException("BooStore not found");
+            var bookStore = GetBookStoreById(bookStoreId);
 
             return _mapper.Map<List<BookDto>>(bookStore.Books);
         }
 
         public BookDto GetBook(int bookStoreId, int bookId)
         {
-            var bookStore = _dbContext.BookStores.FirstOrDefault(x=>x.Id == bookStoreId);
-            if (bookStore == null)
-                throw new ItemNotFoundException("The BookStore not found");
+            var bookStore = GetBookStoreById(bookStoreId);
 
             var book = _dbContext.Books.FirstOrDefault(x => x.Id == bookId);
 
@@ -63,6 +56,16 @@ namespace BookStoreManager.Services
 
 
             return _mapper.Map<BookDto>(book);
+        }
+
+        private BookStore GetBookStoreById(int bookStoreId)
+        {
+            var bookStore = _dbContext.BookStores.Include(x => x.Books).FirstOrDefault(x => x.Id == bookStoreId);
+
+            if (bookStore == null)
+                throw new ItemNotFoundException("BooStore not found");
+
+            return bookStore;
         }
     }
 }
