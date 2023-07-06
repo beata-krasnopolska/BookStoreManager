@@ -14,14 +14,13 @@ namespace BookStoreManager.Models.Validators
 
             RuleFor(x => x.Password).NotEmpty().Equal(x => x.ConfirmPassword).MaximumLength(15);
 
-            var users = dbContext.Users;
             RuleFor(x => x.Email)
-                .Custom((value, dbContext) =>
+                .Custom((value, dtoCcontext) =>
                 {
-                    var existingEmail = users.Any(u => u.Email == value);
+                    var existingEmail = dbContext.Users.Any(u => u.Email == value);
                     if (existingEmail)
                     {
-                        dbContext.AddFailure("Email", "Email already exists in the Db");
+                        dtoCcontext.AddFailure("Email", "Email already exists in the Db");
                     }
 
                 });
