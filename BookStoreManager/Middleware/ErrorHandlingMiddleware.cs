@@ -19,6 +19,11 @@ namespace BookStoreManager.Middleware
             {
                 await next.Invoke(context);
             }
+            catch (IncorrectUserException incorrectUserException)
+            {
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(incorrectUserException.Message);
+            }
             catch (ItemNotFoundException itemNotFoundException)
             {
                 context.Response.StatusCode = 404;
