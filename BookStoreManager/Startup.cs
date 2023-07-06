@@ -1,7 +1,11 @@
 using AutoMapper;
 using BookStoreManager.Entities;
 using BookStoreManager.Middleware;
+using BookStoreManager.Models;
+using BookStoreManager.Models.Validators;
 using BookStoreManager.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,7 +35,7 @@ namespace BookStoreManager
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation();
             services.AddDbContext<BookStoreDbContext>();
             services.AddScoped<BookStoreSeeder>();
             services.AddAutoMapper(this.GetType().Assembly);
@@ -44,6 +48,7 @@ namespace BookStoreManager
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<TimeMeasureMiddleware>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
             services.AddSwaggerGen();
         }
 
