@@ -14,11 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BookStoreManager
 {
@@ -34,6 +31,25 @@ namespace BookStoreManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var authenticationSettings = new AuthenticationSettings();
+            Configuration.GetSection("Authentication").Bind(authenticationSettings);
+
+            services.AddAuthentication(option =>
+           {
+               option.DefaultScheme = "Bearer";
+               option.DefaultAuthenticateScheme = "Bearer";
+               option.DefaultChallengeScheme = "Bearer";
+           }).AddJwtBearer(cfg =>
+           {
+               cfg.RequireHttpsMetadata = true;
+               cfg.SaveToken = true;
+               cfg.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidIssuer = authenticationSettings.JwtIssuer,
+                   ValidAudience = authenticationSettings.JwtIssuer,
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+               };
+           });
 
             services.AddControllers().AddFluentValidation();
             services.AddDbContext<BookStoreDbContext>();
@@ -64,6 +80,8 @@ namespace BookStoreManager
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMiddleware<TimeMeasureMiddleware>();
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
