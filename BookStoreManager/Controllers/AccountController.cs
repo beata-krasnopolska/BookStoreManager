@@ -22,5 +22,12 @@ namespace BookStoreManager.Controllers
 
             return Ok();
         }
+
+        [HttpPost("login")]
+        public ActionResult Login([FromBody] LoginDto loginDto)
+        {
+            var token = _accountService.GenerateJwt(loginDto);
+            return Ok(token);
+        }
     }
 }
