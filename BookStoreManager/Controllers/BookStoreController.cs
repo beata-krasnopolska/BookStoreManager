@@ -19,7 +19,7 @@ namespace BookStoreManager.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles ="Admin, Manager, Client")]
+        [Authorize(Policy = "HasBirthDate")]
         public ActionResult<IEnumerable<BookStoreDto>> GetAllBookStores()
         {
             var bookStores = _bookStoreService.GetAllBookStores();

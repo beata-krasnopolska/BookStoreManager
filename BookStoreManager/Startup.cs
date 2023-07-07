@@ -53,6 +53,11 @@ namespace BookStoreManager
                };
            });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("HasBirthDate", builder => builder.RequireClaim("BirthDate"));
+            });
+
             services.AddControllers().AddFluentValidation();
             services.AddDbContext<BookStoreDbContext>();
             services.AddScoped<BookStoreSeeder>();
