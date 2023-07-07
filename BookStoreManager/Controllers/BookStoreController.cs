@@ -1,5 +1,6 @@
 ﻿using BookStoreManager.Models;
 using BookStoreManager.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -7,6 +8,7 @@ namespace BookStoreManager.Controllers
 {
     [Route("api/bookStore")]
     [ApiController]
+    [Authorize]
     public class BookStoreController : ControllerBase
     {
         private readonly IBookStoreService _bookStoreService;
@@ -17,6 +19,7 @@ namespace BookStoreManager.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles ="Admin, Manager, Client")]
         public ActionResult<IEnumerable<BookStoreDto>> GetAllBookStores()
         {
             var bookStores = _bookStoreService.GetAllBookStores();
@@ -43,6 +46,7 @@ namespace BookStoreManager.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Manager")]
         public ActionResult<int> CreateBookStore([FromBody] CretaeBookStoreDto cretaeBookStoreDto)
         {
             var bookStoreId = _bookStoreService.CreateBookStore(cretaeBookStoreDto);
@@ -51,6 +55,7 @@ namespace BookStoreManager.Controllers
         }
 
         [HttpDelete("{bookStoreId}")]
+        [Authorize(Roles = "Admin, Manager")]
         public ActionResult DeleteBookStore([FromRoute] int bookStoreId)
         {
             _bookStoreService.DeleteBookStore(bookStoreId);
@@ -59,6 +64,7 @@ namespace BookStoreManager.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, Manager")]
         public ActionResult UpdateBookStore([FromBody]UpdateBookStoreDto dto, [FromRoute] int id)
         {
             _bookStoreService.UpdateBookStore(dto, id);
