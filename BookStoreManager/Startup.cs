@@ -68,10 +68,12 @@ namespace BookStoreManager
             services.AddScoped<IBookStoreService, BookStoreService>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<TimeMeasureMiddleware>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+            services.AddHttpContextAccessor();
             services.AddSwaggerGen();
         }
 
