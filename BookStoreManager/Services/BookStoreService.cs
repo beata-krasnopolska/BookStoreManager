@@ -22,11 +22,12 @@ namespace BookStoreManager.Services
             _mapper = mapper;
             _logger = logger;
         }
-        public IEnumerable<BookStoreDto> GetAllBookStores()
+        public IEnumerable<BookStoreDto> GetAllBookStores(string searchParam)
         {
             var bookStores = _dbContext.BookStores
                 .Include(b => b.Books)
                 .Include(a => a.Address)
+                .Where(x => searchParam == null || (x.Name.ToLower().Contains(searchParam.ToLower()) || x.Description.ToLower().Contains(searchParam.ToLower())))
                 .ToList();
 
             if (bookStores == null)
