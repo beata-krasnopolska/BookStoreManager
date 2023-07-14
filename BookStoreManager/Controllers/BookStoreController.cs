@@ -20,9 +20,9 @@ namespace BookStoreManager.Controllers
 
         [HttpGet]
         [Authorize(Policy = "HasBirthDate")]
-        public ActionResult<IEnumerable<BookStoreDto>> GetAllBookStores([FromQuery] string searchParam)
+        public ActionResult<IEnumerable<BookStoreDto>> GetAllBookStores([FromQuery] BookStoreQuery query)
         {
-            var bookStores = _bookStoreService.GetAllBookStores(searchParam);
+            var bookStores = _bookStoreService.GetAllBookStores(query);
 
             if(bookStores == null)
             {
