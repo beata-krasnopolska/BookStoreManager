@@ -5,7 +5,7 @@ namespace BookStoreManager.Services
 {
     public interface IBookStoreService
     {
-        IEnumerable<BookStoreDto> GetAllBookStores(BookStoreQuery query);
+        PageResult<BookStoreDto> GetAllBookStores(BookStoreQuery query);
 
         BookStoreDto GetBookStoreById(int id);
 

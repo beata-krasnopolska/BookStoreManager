@@ -22,24 +22,26 @@ namespace BookStoreManager.Services
             _mapper = mapper;
             _logger = logger;
         }
-        public IEnumerable<BookStoreDto> GetAllBookStores(BookStoreQuery query)
+        public PageResult<BookStoreDto> GetAllBookStores(BookStoreQuery query)
         {
-            var bookStores = _dbContext.BookStores
-                .Include(b => b.Books)
-                .Include(a => a.Address)
-                .Where(x => query.SearchParam == null || (x.Name.ToLower().Contains(query.SearchParam.ToLower()) || x.Description.ToLower().Contains(query.SearchParam.ToLower())))
-                .Skip(query.PageNumber * (query.PageNumber -1))
+            var bookStoresResult = _dbContext.BookStores
+            .Include(b => b.Books)
+            .Include(a => a.Address)
+            .Where(x => query.SearchParam == null 
+                || (x.Name.ToLower().Contains(query.SearchParam.ToLower()) 
+                || x.Description.ToLower().Contains(query.SearchParam.ToLower())));
+
+            var bookStores = bookStoresResult.Skip(query.PageNumber * (query.PageNumber -1))
                 .Take(query.PageSize)
                 .ToList();
 
-            if (bookStores == null)
-            {
-                throw new Exception();
-            }
+            var totalCount = bookStoresResult.Count();
 
             var bookStoresDto = _mapper.Map<List<BookStoreDto>>(bookStores);
 
-            return bookStoresDto;
+            var result = new PageResult<BookStoreDto>(bookStoresDto, totalCount, query.PageSize, query.PageNumber);
+
+            return result;
         }
 
         public BookStoreDto GetBookStoreById(int id)
