@@ -73,6 +73,7 @@ namespace BookStoreManager
             services.AddScoped<TimeMeasureMiddleware>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+            services.AddScoped< IValidator<BookStoreQuery>, BookStoreQueryValidator>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen();
         }
