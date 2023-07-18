@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace BookStoreManager.Services
 {
@@ -25,11 +26,27 @@ namespace BookStoreManager.Services
         public PageResult<BookStoreDto> GetAllBookStores(BookStoreQuery query)
         {
             var bookStoresResult = _dbContext.BookStores
-            .Include(b => b.Books)
-            .Include(a => a.Address)
-            .Where(x => query.SearchParam == null 
-                || (x.Name.ToLower().Contains(query.SearchParam.ToLower()) 
-                || x.Description.ToLower().Contains(query.SearchParam.ToLower())));
+                .Include(b => b.Books)
+                .Include(a => a.Address)
+                .Where(x => query.SearchParam == null 
+                    || (x.Name.ToLower().Contains(query.SearchParam.ToLower()) 
+                    || x.Description.ToLower().Contains(query.SearchParam.ToLower())));
+
+            if (!String.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelector = new Dictionary<string, Expression<Func<BookStore, object>>>
+                {
+                    {nameof(BookStore.Name), b => b.Name },
+                    {nameof(BookStore.Description), b => b.Description },
+                    {nameof(BookStore.Category), b => b.Category },
+                };
+
+                var selectedColumn = columnsSelector[query.SortBy];
+
+                bookStoresResult = query.SortDirection == SortDirection.ASC 
+                    ? bookStoresResult.OrderBy(selectedColumn)
+                    : bookStoresResult.OrderByDescending(selectedColumn);
+            }
 
             var bookStores = bookStoresResult.Skip(query.PageNumber * (query.PageNumber -1))
                 .Take(query.PageSize)
