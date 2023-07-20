@@ -76,11 +76,20 @@ namespace BookStoreManager
             services.AddScoped< IValidator<BookStoreQuery>, BookStoreQueryValidator>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("FrontendClient", builder =>
+                builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithOrigins(Configuration["AllowedOrigins"])
+                        );
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BookStoreSeeder seeder)
         {
+            app.UseCors("FrontendClient");
             seeder.Seed();
 
             if (env.IsDevelopment())
